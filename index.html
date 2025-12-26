@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Süper Resfebe Avı</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;900&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;900&display=swap&subset=latin-ext"
+        rel="stylesheet">
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
@@ -20,18 +21,12 @@
     <style>
         :root {
             --primary: #6C5CE7;
-            /* Mor */
             --primary-dark: #5649c0;
             --secondary: #00CEC9;
-            /* Turkuaz */
             --accent: #FD79A8;
-            /* Pembe */
             --success: #00b894;
-            /* Yeşil */
             --warning: #fdcb6e;
-            /* Sarı */
             --error: #d63031;
-            /* Kırmızı */
             --bg-gradient: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
             --card-bg: rgba(255, 255, 255, 0.95);
         }
@@ -39,7 +34,6 @@
         * {
             box-sizing: border-box;
             user-select: none;
-            /* Metin seçimini engelle */
         }
 
         body {
@@ -52,10 +46,8 @@
             align-items: center;
             background: var(--bg-gradient);
             overflow: hidden;
-            /* Gereksiz scrollu engelle */
         }
 
-        /* Arkaplan Süslemeleri (Opsiyonel) */
         .bg-circle {
             position: absolute;
             border-radius: 50%;
@@ -63,12 +55,10 @@
             z-index: -1;
         }
 
-        /* Ana Oyun Kutusu */
         .game-card {
             background: var(--card-bg);
             width: 90%;
             max-width: 800px;
-            /* Geniş ekranlar için daha geniş */
             padding: 40px;
             border-radius: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
@@ -91,7 +81,6 @@
             font-size: 1.2rem;
         }
 
-        /* İlerleme Çubuğu */
         .progress-container {
             width: 100%;
             background-color: #dfe6e9;
@@ -119,7 +108,6 @@
             text-align: right;
         }
 
-        /* Soru Alanı */
         .question-area {
             background: #f1f2f6;
             border: 3px dashed #b2bec3;
@@ -132,7 +120,6 @@
             align-items: center;
             flex-wrap: wrap;
             font-size: 4.5rem;
-            /* Emoji boyutu */
             gap: 15px;
             transition: all 0.3s;
         }
@@ -149,7 +136,6 @@
             align-self: center;
         }
 
-        /* Input Alanı */
         input[type="text"] {
             width: 80%;
             padding: 15px;
@@ -178,7 +164,6 @@
             letter-spacing: normal;
         }
 
-        /* Butonlar */
         button {
             border: none;
             padding: 15px 40px;
@@ -193,7 +178,6 @@
             top: 0;
             color: white;
             box-shadow: 0 5px 0 rgba(0, 0, 0, 0.1);
-            /* 3D efekt */
         }
 
         button:active {
@@ -221,14 +205,12 @@
             background-color: var(--secondary);
             width: 100%;
             display: none;
-            /* Başlangıçta gizli */
         }
 
         .btn-next:hover {
             filter: brightness(1.1);
         }
 
-        /* Geri Bildirim Mesajı */
         .feedback-message {
             height: 30px;
             margin-top: 15px;
@@ -255,13 +237,11 @@
             filter: brightness(0.8);
         }
 
-        /* Ekran Kontrolü */
         #game-screen,
         #end-screen {
             display: none;
         }
 
-        /* Animasyonlar */
         @keyframes shake {
 
             0%,
@@ -310,7 +290,6 @@
             }
         }
 
-        /* Mobil Düzenleme */
         @media (max-width: 600px) {
             .question-area {
                 font-size: 3rem;
@@ -370,59 +349,11 @@
     </div>
 
     <script>
-        // Sorular (Veri) - Aynen korundu
-        const questions = [
-            { q: "👤 <span class='plus-sign'>+</span> 🐝", a: "BAŞARI" },
-            { q: "🍯 <span class='plus-sign'>+</span> 🔟", a: "BALON" },
-            { q: "🐘 <span class='plus-sign'>+</span> 👣", a: "FİLİZ" },
-            { q: "🌙 <span class='plus-sign'>+</span> ⚪", a: "AYAK" },
-            { q: "❄️ <span class='plus-sign'>+</span> 🐟", a: "KARTON" },
-            { q: "🏹 <span class='plus-sign'>+</span> U <span class='plus-sign'>+</span> L", a: "OKUL" },
-            { q: "🧊 <span class='plus-sign'>+</span> E", a: "KÜPE" },
-            { q: "🐎 <span class='plus-sign'>+</span> KI", a: "ATKI" },
-            { q: "🏰 <span class='plus-sign'>+</span> M", a: "KALEM" },
-            { q: "🍯 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> A", a: "BALTA" },
-            { q: "🔔 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> A", a: "ÇANTA" },
-            { q: "🌊 <span class='plus-sign'>+</span> 6️⃣", a: "DENİZALTI" },
-            { q: "5️⃣ <span class='plus-sign'>+</span> İK", a: "BEŞİK" },
-            { q: "💯 <span class='plus-sign'>+</span> Ü <span class='plus-sign'>+</span> K", a: "YÜZÜK" },
-            { q: "✋ <span class='plus-sign'>+</span> D <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> ↔️", a: "ELDİVEN" },
-            { q: "✂️ <span class='plus-sign'>+</span> TANE", a: "KESTANE" },
-            { q: "🔋 <span class='plus-sign'>+</span> 🔫", a: "PİLAV" },
-            { q: "💥 <span class='plus-sign'>+</span> 🐎 <span class='plus-sign'>+</span> 💨", a: "PATATES" },
-            { q: "S <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🌿 <span class='plus-sign'>+</span> 🍽️", a: "SANDALYE" },
-            { q: "🍯 <span class='plus-sign'>+</span> K <span class='plus-sign'>+</span> 🔟", a: "BALKON" },
-            { q: "L <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> M <span class='plus-sign'>+</span> 🔟", a: "LİMON" },
-            { q: "B <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> E", a: "BERE" },
-            { q: "🐎 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> 🥩", a: "ATLET" },
-            { q: "💪 <span class='plus-sign'>+</span> 🍽️", a: "KOLYE" },
-            { q: "♟️ <span class='plus-sign'>+</span> 📞", a: "MATARA" },
-            { q: "🎵 <span class='plus-sign'>+</span> ♟️ <span class='plus-sign'>+</span> 🎼", a: "DOMATES" },
-            { q: "⬅️ <span class='plus-sign'>+</span> U <span class='plus-sign'>+</span> ❤️", a: "SOLUCAN" },
-            { q: "K <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> 👁️", a: "KABAK" },
-            { q: "K <span class='plus-sign'>+</span> 🔫 <span class='plus-sign'>+</span> 🥡", a: "KAVUN" },
-            { q: "M <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🌿", a: "MANDAL" },
-            { q: "P <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> D <span class='plus-sign'>+</span> E", a: "PERDE" },
-            { q: "⬛ <span class='plus-sign'>+</span> ✏️", a: "KARAKALEM" },
-            { q: "🌙 <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> A", a: "AYVA" },
-            { q: "🧺 <span class='plus-sign'>+</span> 📉", a: "KİRAZ" },
-            { q: "S <span class='plus-sign'>+</span> 🕶️ <span class='plus-sign'>+</span> N", a: "SAMAN" },
-            { q: "👁️ <span class='plus-sign'>+</span> 🌋 <span class='plus-sign'>+</span> A", a: "BAKLAVA" },
-            { q: "TA <span class='plus-sign'>+</span> 👁️", a: "TABAK" },
-            { q: "🍯 <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> N <span class='plus-sign'>+</span> A", a: "BALİNA" },
-            { q: "☁️ <span class='plus-sign'>+</span> 🐦 <span class='plus-sign'>+</span> 🕸️ <span class='plus-sign'>+</span> I", a: "GÖKKUŞAĞI" },
-            { q: "❄️ <span class='plus-sign'>+</span> N <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> 🌸", a: "KARNABAHAR" },
-            { q: "💥 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> I <span class='plus-sign'>+</span> ❤️", a: "PATLICAN" },
-            { q: "🦆 <span class='plus-sign'>+</span> ⬜", a: "KAZAK" }
-        ];
-
+        const questions = [{ q: "👤 <span class='plus-sign'>+</span> 🐝", a: "BAŞARI" }, { q: "🍯 <span class='plus-sign'>+</span> 🔟", a: "BALON" }, { q: "🐘 <span class='plus-sign'>+</span> 👣", a: "FİLİZ" }, { q: "🌙 <span class='plus-sign'>+</span> ⚪", a: "AYAK" }, { q: "❄️ <span class='plus-sign'>+</span> 🐟", a: "KARTON" }, { q: "🏹 <span class='plus-sign'>+</span> U <span class='plus-sign'>+</span> L", a: "OKUL" }, { q: "🧊 <span class='plus-sign'>+</span> E", a: "KÜPE" }, { q: "🐎 <span class='plus-sign'>+</span> KI", a: "ATKI" }, { q: "🏰 <span class='plus-sign'>+</span> M", a: "KALEM" }, { q: "🍯 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> A", a: "BALTA" }, { q: "🔔 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> A", a: "ÇANTA" }, { q: "🌊 <span class='plus-sign'>+</span> 6️⃣", a: "DENİZALTI" }, { q: "5️⃣ <span class='plus-sign'>+</span> İK", a: "BEŞİK" }, { q: "💯 <span class='plus-sign'>+</span> Ü <span class='plus-sign'>+</span> K", a: "YÜZÜK" }, { q: "✋ <span class='plus-sign'>+</span> D <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> ↔️", a: "ELDİVEN" }, { q: "✂️ <span class='plus-sign'>+</span> TANE", a: "KESTANE" }, { q: "🔋 <span class='plus-sign'>+</span> 🔫", a: "PİLAV" }, { q: "💥 <span class='plus-sign'>+</span> 🐎 <span class='plus-sign'>+</span> 💨", a: "PATATES" }, { q: "S <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🌿 <span class='plus-sign'>+</span> 🍽️", a: "SANDALYE" }, { q: "🍯 <span class='plus-sign'>+</span> K <span class='plus-sign'>+</span> 🔟", a: "BALKON" }, { q: "L <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> M <span class='plus-sign'>+</span> 🔟", a: "LİMON" }, { q: "B <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> E", a: "BERE" }, { q: "🐎 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> 🥩", a: "ATLET" }, { q: "💪 <span class='plus-sign'>+</span> 🍽️", a: "KOLYE" }, { q: "♟️ <span class='plus-sign'>+</span> 📞", a: "MATARA" }, { q: "🎵 <span class='plus-sign'>+</span> ♟️ <span class='plus-sign'>+</span> 🎼", a: "DOMATES" }, { q: "⬅️ <span class='plus-sign'>+</span> U <span class='plus-sign'>+</span> ❤️", a: "SOLUCAN" }, { q: "K <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> 👁️", a: "KABAK" }, { q: "K <span class='plus-sign'>+</span> 🔫 <span class='plus-sign'>+</span> 🥡", a: "KAVUN" }, { q: "M <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🌿", a: "MANDAL" }, { q: "P <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> D <span class='plus-sign'>+</span> E", a: "PERDE" }, { q: "⬛ <span class='plus-sign'>+</span> ✏️", a: "KARAKALEM" }, { q: "🌙 <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> A", a: "AYVA" }, { q: "🧺 <span class='plus-sign'>+</span> 📉", a: "KİRAZ" }, { q: "S <span class='plus-sign'>+</span> 🕶️ <span class='plus-sign'>+</span> N", a: "SAMAN" }, { q: "👁️ <span class='plus-sign'>+</span> 🌋 <span class='plus-sign'>+</span> A", a: "BAKLAVA" }, { q: "TA <span class='plus-sign'>+</span> 👁️", a: "TABAK" }, { q: "🍯 <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> N <span class='plus-sign'>+</span> A", a: "BALİNA" }, { q: "☁️ <span class='plus-sign'>+</span> 🐦 <span class='plus-sign'>+</span> 🕸️ <span class='plus-sign'>+</span> I", a: "GÖKKUŞAĞI" }, { q: "❄️ <span class='plus-sign'>+</span> N <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> 🌸", a: "KARNABAHAR" }, { q: "💥 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> I <span class='plus-sign'>+</span> ❤️", a: "PATLICAN" }, { q: "🦆 <span class='plus-sign'>+</span> ⬜", a: "KAZAK" }];
         let currentIndex = 0;
-
-        // Element Seçimleri
         const startScreen = document.getElementById("start-screen");
         const gameScreen = document.getElementById("game-screen");
         const endScreen = document.getElementById("end-screen");
-
         const questionDisplay = document.getElementById("question-display");
         const userInput = document.getElementById("user-input");
         const feedbackMsg = document.getElementById("feedback-msg");
@@ -431,42 +362,29 @@
         const qCurrent = document.getElementById("q-current");
         const qTotal = document.getElementById("q-total");
         const progressBar = document.getElementById("progress-bar");
-
         function startGame() {
             startScreen.style.display = "none";
             gameScreen.style.display = "block";
             qTotal.textContent = questions.length;
             loadQuestion();
         }
-
         function loadQuestion() {
-            // UI Sıfırlama
             userInput.value = "";
             userInput.disabled = false;
             userInput.focus();
-
             feedbackMsg.textContent = "";
             feedbackMsg.className = "feedback-message";
-
             btnCheck.style.display = "block";
             btnNext.style.display = "none";
-
-            // Veri Güncelleme
             qCurrent.textContent = currentIndex + 1;
-
-            // Progress Bar Güncelleme
             const percentage = ((currentIndex) / questions.length) * 100;
             progressBar.style.width = percentage + "%";
-
-            // Soruyu yükle (HTML içeriği olarak, animasyon için)
             questionDisplay.innerHTML = questions[currentIndex].q;
         }
 
         function showFeedback(text, type) {
             feedbackMsg.textContent = text;
             feedbackMsg.className = `feedback-message visible ${type}`;
-
-            // Eğer hata ise inputu salla
             if (type === 'error' || type === 'warning') {
                 userInput.classList.add('shake-it');
                 setTimeout(() => userInput.classList.remove('shake-it'), 400);
@@ -474,10 +392,7 @@
         }
 
         function checkAnswer() {
-            // Trim ve Türkçe büyük harf dönüşümü
             let val = userInput.value.trim();
-
-            // 1. Durum: Cevap yoksa
             if (!val) {
                 showFeedback("Lütfen cevabı yaz! ✍️", "warning");
                 userInput.focus();
@@ -486,21 +401,16 @@
 
             let userAnswer = val.toLocaleUpperCase('tr-TR');
             let correctAnswer = questions[currentIndex].a.toLocaleUpperCase('tr-TR');
-
-            // 2. Durum: Yanlış cevap
             if (userAnswer !== correctAnswer) {
                 showFeedback("Doğru değil, tekrar dene! 🤔", "error");
                 userInput.select();
             }
-            // 3. Durum: Doğru Cevap
             else {
                 showFeedback("Süpersin! Doğru Bildin! 🎉", "success");
 
                 userInput.disabled = true;
                 btnCheck.style.display = "none";
                 btnNext.style.display = "block";
-
-                // Progress Bar'ı tamamlama efekti için hafif artır
                 const percentage = ((currentIndex + 1) / questions.length) * 100;
                 progressBar.style.width = percentage + "%";
 
@@ -518,14 +428,12 @@
             }
         }
 
-        // Klavye Olayları
         userInput.addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
                 checkAnswer();
             }
         });
 
-        // Next butonu odaklıyken enter'a basılırsa
         btnNext.addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
                 nextQuestion();
@@ -536,6 +444,3 @@
 </body>
 
 </html>
-
-
-
