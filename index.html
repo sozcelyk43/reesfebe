@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Süper Resfebe Avı</title>
-
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;900&display=swap&subset=latin-ext"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -159,6 +165,24 @@
         .question-area span {
             display: inline-block;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .question-area i {
+            font-size: 5rem;
+            margin: 0 10px;
+            filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s;
+            vertical-align: middle;
+        }
+
+        .question-area i:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        @media (max-width: 600px) {
+            .question-area i {
+                font-size: 3.5rem;
+            }
         }
 
         .plus-sign {
@@ -567,42 +591,79 @@
             }
         }
 
+        /* --- BÖLÜM SEÇME EKRANI DÜZENLEMESİ --- */
+
+        #level-screen {
+            width: 100%;
+            /* Kartın tamamını kapla */
+            height: 100%;
+            /* Yüksekliği doldur */
+            display: none;
+            /* JS ile açılacak, burası none kalsın */
+            flex-direction: column;
+            align-items: center;
+        }
+
         .level-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 10px;
+            /* Kutucukları biraz büyüttük (min 60px yerine 85px) */
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 15px;
+            /* Aradaki boşlukları açtık */
+            width: 100%;
+            /* Genişliğe yayıl */
+            padding: 10px 20px;
             margin-top: 20px;
-            max-height: 50vh;
             overflow-y: auto;
-            padding: 10px 10px 50px 10px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) #dfe6e9;
+            /* Taşarsa kaydır */
+            flex: 1;
+            /* Kalan tüm boşluğu doldur */
+
+            /* Scrollbar Gizleme (Hem Chrome hem Firefox için) */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
+        /* Chrome/Safari için scrollbar gizleme */
+        .level-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Butonları daha kare ve şık yapalım */
         .level-btn {
+            aspect-ratio: 1;
+            /* Tam kare olsun */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: #dfe6e9;
             border: none;
-            padding: 15px 0;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.2rem;
+            border-radius: 15px;
+            /* Köşeleri daha yuvarlak */
+            font-weight: 900;
+            font-size: 1.5rem;
             color: #636e72;
             cursor: pointer;
-        }
-
-        .level-btn.unlocked {
-            background: var(--bg-gradient);
-            color: white;
+            transition: transform 0.2s, background 0.2s;
             box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .level-btn.current {
-            border: 3px solid var(--primary);
-            animation: pulse 2s infinite;
+            /* Hafif 3D efekt */
         }
 
         .level-btn:active {
-            transform: translateY(2px);
+            transform: translateY(4px);
+            /* Basınca içe göçme efekti */
+            box-shadow: none;
+        }
+
+        .level-btn.unlocked {
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            color: white;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .level-btn.current {
+            border: 4px solid var(--primary);
+            animation: pulse 2s infinite;
         }
 
         .admin-trigger {
