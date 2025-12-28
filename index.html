@@ -8,16 +8,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;900&display=swap&subset=latin-ext"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-
-    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
     <style>
         :root {
             --primary: #6C5CE7;
@@ -40,12 +32,14 @@
             font-family: 'Kanit', sans-serif;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background: var(--bg-gradient);
             overflow: hidden;
+            position: relative;
         }
 
         .bg-circle {
@@ -53,32 +47,70 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             z-index: -1;
+            pointer-events: none;
         }
 
         .game-card {
             background: var(--card-bg);
-            width: 90%;
-            max-width: 800px;
-            padding: 40px;
+            width: 95vw;
+            height: 85vh;
+            max-width: 900px;
+            padding: 20px;
             border-radius: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
             text-align: center;
             position: relative;
             border: 4px solid #fff;
             backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            overflow-y: auto;
+            margin: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .game-card::-webkit-scrollbar {
+            display: none;
+        }
+
+        .logo-text {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-size: 4rem;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00dbde, #fc00ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 10px 0 0 0;
+            filter: drop-shadow(0 5px 15px rgba(100, 100, 255, 0.4));
+            animation: rainbowMove 5s ease infinite;
+            line-height: 1;
+        }
+
+        .logo-subtext {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            opacity: 0.8;
         }
 
         h1 {
             color: var(--primary);
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin: 0 0 10px 0;
             text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
         }
 
         p {
             color: #636e72;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .progress-container {
@@ -112,15 +144,15 @@
             background: #f1f2f6;
             border: 3px dashed #b2bec3;
             border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
-            min-height: 150px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 140px;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            font-size: 4.5rem;
-            gap: 15px;
+            font-size: 4rem;
+            gap: 10px;
             transition: all 0.3s;
         }
 
@@ -137,9 +169,9 @@
         }
 
         input[type="text"] {
-            width: 80%;
-            padding: 15px;
-            font-size: 1.8rem;
+            width: 90%;
+            padding: 12px;
+            font-size: 1.6rem;
             font-family: 'Kanit', sans-serif;
             text-align: center;
             border: 3px solid #dfe6e9;
@@ -160,20 +192,20 @@
 
         input[type="text"]::placeholder {
             color: #b2bec3;
-            font-size: 1.2rem;
+            font-size: 1rem;
             letter-spacing: normal;
         }
 
         button {
             border: none;
             padding: 15px 40px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-family: 'Kanit', sans-serif;
             font-weight: 700;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s;
-            margin-top: 25px;
+            margin-top: 20px;
             position: relative;
             top: 0;
             color: white;
@@ -187,9 +219,17 @@
 
         .btn-start {
             background-color: var(--success);
-            font-size: 2rem;
-            padding: 20px 60px;
+            font-size: 1.3rem;
+            padding: 15px;
             animation: pulse 2s infinite;
+        }
+
+        .menu-btn {
+            display: block;
+            width: 100%;
+            margin: 8px 0;
+            font-size: 1.1rem;
+            padding: 12px;
         }
 
         .btn-check {
@@ -207,14 +247,37 @@
             display: none;
         }
 
-        .btn-next:hover {
-            filter: brightness(1.1);
+        .btn-back-game {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #dfe6e9;
+            color: #636e72;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            box-shadow: none;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .btn-back-game:hover {
+            background: var(--error);
+            color: white;
+            transform: scale(1.1);
         }
 
         .feedback-message {
             height: 30px;
             margin-top: 15px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             opacity: 0;
             transition: opacity 0.3s;
@@ -238,7 +301,9 @@
         }
 
         #game-screen,
-        #end-screen {
+        #end-screen,
+        #level-screen,
+        #admin-screen {
             display: none;
         }
 
@@ -290,19 +355,300 @@
             }
         }
 
+        @keyframes rainbowMove {
+            0% {
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+
+            50% {
+                background-position: 100% 50%;
+                transform: scale(1.02);
+            }
+
+            100% {
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+        }
+
         @media (max-width: 600px) {
             .question-area {
                 font-size: 3rem;
             }
 
-            h1 {
-                font-size: 1.8rem;
+            .logo-text {
+                font-size: 3rem;
+            }
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.3s ease;
+            position: relative;
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .rating-container {
+            margin: 20px 0;
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            margin: 10px 0;
+            accent-color: var(--primary);
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #636e72;
+            font-weight: bold;
+        }
+
+        .rating-value-display {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 900;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--error);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 600;
+            z-index: 900;
+            pointer-events: none;
+        }
+
+        .app-promo {
+            margin-top: 15px;
+            padding-top: 0;
+            border-top: none;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s backwards;
+        }
+
+        .app-promo a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            background: linear-gradient(135deg, #6C5CE7 0%, #a29bfe 100%);
+            padding: 12px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .app-promo a:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.4);
+        }
+
+        .app-promo a::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            opacity: 0;
+        }
+
+        .app-promo a:hover::after {
+            left: 100%;
+            opacity: 1;
+            transition: 0.5s;
+        }
+
+        .app-promo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+        }
+
+        .app-promo-text {
+            text-align: left;
+            flex: 1;
+        }
+
+        .app-promo-title {
+            color: #fff;
+            font-weight: 900;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 2px;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .app-promo-desc {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8rem;
+            display: block;
+        }
+
+        .app-promo-arrow {
+            font-size: 1.5rem;
+            color: #fff;
+            animation: bounceRight 1.5s infinite;
+        }
+
+        @keyframes bounceRight {
+
+            0%,
+            100% {
+                transform: translateX(0);
             }
 
-            .btn-start {
-                font-size: 1.5rem;
-                padding: 15px 30px;
+            50% {
+                transform: translateX(5px);
             }
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding: 10px 10px 50px 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) #dfe6e9;
+        }
+
+        .level-btn {
+            background: #dfe6e9;
+            border: none;
+            padding: 15px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #636e72;
+            cursor: pointer;
+        }
+
+        .level-btn.unlocked {
+            background: var(--bg-gradient);
+            color: white;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .level-btn.current {
+            border: 3px solid var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .level-btn:active {
+            transform: translateY(2px);
+        }
+
+        .admin-trigger {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .admin-trigger:hover {
+            opacity: 1;
+        }
+
+        .admin-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #dfe6e9;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f2f6;
+            color: var(--primary);
+            position: sticky;
+            top: 0;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
         }
     </style>
 </head>
@@ -315,13 +661,67 @@
     <div class="game-card">
 
         <div id="start-screen">
-            <h1>🧠 RESFEBE AVI</h1>
-            <p>Görselleri birleştir, gizli kelimeyi bul!</p>
-            <div style="font-size: 6rem; margin: 30px; animation: pulse 3s infinite;">🕵️‍♂️🧩</div>
-            <button class="btn-start" onclick="startGame()">OYNA</button>
+            <div class="admin-trigger" onclick="openAdminPanel()">🔒</div>
+
+            <div class="logo-text">RESFEBE</div>
+            <div class="logo-subtext">AVI</div>
+
+            <p style="color: #636e72; font-weight: 600; margin-bottom: 20px; font-size: 1rem;">
+                Görselleri birleştir, gizli kelimeyi bul!
+            </p>
+
+            <button id="btn-resume" class="btn-start menu-btn" style="background:var(--warning); display:none;"
+                onclick="resumeGame()">▶️ DEVAM ET</button>
+            <button class="btn-start menu-btn" onclick="startGame(0)">🎬 YENİ OYUN</button>
+            <button class="btn-check menu-btn" style="background:var(--accent);" onclick="showLevelScreen()">🔢
+                BÖLÜMLER</button>
+
+            <div class="app-promo">
+                <a href="https://play.google.com/store/apps/details?id=com.ozcelikinc.kelimeavlama" target="_blank">
+                    <img src="kalogo.png" alt="Logo">
+                    <div class="app-promo-text">
+                        <span class="app-promo-title">Kelime Avlama</span>
+                        <span class="app-promo-desc">Yeni oyunumuzu denediniz mi? Hemen İndir! 🚀</span>
+                    </div>
+                    <div class="app-promo-arrow">➡️</div>
+                </a>
+            </div>
+        </div>
+
+        <div id="level-screen">
+            <h2 style="color:var(--primary);">BÖLÜM SEÇ</h2>
+            <button class="btn-check" style="width: auto; padding: 10px 20px; background:#b2bec3;"
+                onclick="backToMenu()">⬅️ MENÜYE DÖN</button>
+            <div class="level-grid" id="level-grid">
+            </div>
+        </div>
+
+        <div id="admin-screen">
+            <h2 style="color:var(--primary);">YÖNETİCİ PANELİ</h2>
+            <p style="font-size:0.9rem;">Bu oturumda puanlanan sorular:</p>
+
+            <div class="admin-table-container">
+                <table id="admin-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Cevap</th>
+                            <th>Zorluk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn-check" style="background-color: #636e72;" onclick="downloadCSV()">📥 LİSTEYİ İNDİR
+                (EXCEL)</button>
+            <button class="btn-check" style="background-color: var(--warning); margin-top:10px;"
+                onclick="backToMenu()">⬅️ MENÜYE DÖN</button>
         </div>
 
         <div id="game-screen">
+            <button class="btn-back-game" onclick="showExitModal()">⬅️</button>
             <span class="progress-text">Soru: <span id="q-current">1</span> / <span id="q-total">50</span></span>
             <div class="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
@@ -348,179 +748,57 @@
 
     </div>
 
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModalOnly()">&times;</span>
+            <div class="modal-title" id="modal-title">HARİKA! 🎉</div>
+            <p id="modal-msg">Tebrikler, doğru bildin!</p>
+
+            <div class="rating-container">
+                <p style="margin:0 0 10px 0; color: #2d3436; font-weight:600;">Bu soru ne kadar zordu?</p>
+                <div class="rating-value-display"><span id="rating-val">5</span>/10</div>
+                <input type="range" id="difficulty-slider" min="1" max="10" value="5"
+                    oninput="document.getElementById('rating-val').textContent = this.value">
+                <div class="rating-labels">
+                    <span>Çok Kolay (1)</span>
+                    <span>Çok Zor (10)</span>
+                </div>
+            </div>
+
+            <button class="btn-check" onclick="saveAndNext()">DEĞERLENDİR VE GEÇ ➡️</button>
+        </div>
+    </div>
+    <div id="exit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🤔</div>
+            <h2 style="color: var(--primary); margin: 0;">EMİN MİSİN?</h2>
+            <p style="color: #636e72;">Mevcut oyunun sonlanacak ve ana menüye döneceksin.</p>
+
+            <div class="modal-btn-group">
+                <button class="btn-check" style="background-color: #b2bec3; padding: 10px 20px;"
+                    onclick="closeExitModal()">HAYIR</button>
+                <button class="btn-check" style="background-color: var(--error); padding: 10px 20px;"
+                    onclick="confirmExit()">EVET</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 Ozcelik Inc. (Sinan Özçelik tarafından yapılmıştır. Her hakkı saklıdır.)
+    </div>
+
+    <script src="questions.js"></script>
+
     <script>
-        const questions = [
-
-            { q: "👤 <span class='plus-sign'>+</span> 🐝", a: "BAŞARI" },
-            { q: "🍯 <span class='plus-sign'>+</span> 🔟", a: "BALON" },
-            { q: "🐘 <span class='plus-sign'>+</span> 👣", a: "FİLİZ" },
-            { q: "🌙 <span class='plus-sign'>+</span> ⚪", a: "AYAK" },
-            { q: "❄️ <span class='plus-sign'>+</span> 🐟", a: "KARTON" },
-            { q: "🧊 <span class='plus-sign'>+</span> E", a: "KÜPE" },
-            { q: "🏰 <span class='plus-sign'>+</span> M", a: "KALEM" },
-            { q: "🌊 <span class='plus-sign'>+</span> 6️⃣", a: "DENİZALTI" },
-            { q: "🔋 <span class='plus-sign'>+</span> 🔫", a: "PİLAV" },
-            { q: "💪 <span class='plus-sign'>+</span> 🍽️", a: "KOLYE" },
-            { q: "♟️ <span class='plus-sign'>+</span> 📞", a: "MATARA" },
-            { q: "⬛ <span class='plus-sign'>+</span> ✏️", a: "KARAKALEM" },
-            { q: "🦆 <span class='plus-sign'>+</span> ⬜", a: "KAZAK" },
-            { q: "🌿 <span class='plus-sign'>+</span> ✋", a: "OTEL" },
-            { q: "1️⃣ <span class='plus-sign'>+</span> ✋", a: "TEKEL" },
-            { q: "1️⃣ <span class='plus-sign'>+</span> 🪖", a: "TEKER" },
-            { q: "💥 <span class='plus-sign'>+</span> 🐎 <span class='plus-sign'>+</span> ༄", a: "PATATES" },
-            { q: "🍯 <span class='plus-sign'>+</span> K <span class='plus-sign'>+</span> 🔟", a: "BALKON" },
-            { q: "B <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> E", a: "BERE" },
-            { q: "🐎 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> 🥩", a: "ATLET" },
-            { q: "🎵 <span class='plus-sign'>+</span> ♟️ <span class='plus-sign'>+</span> 🎼", a: "DOMATES" },
-            { q: "⬅️ <span class='plus-sign'>+</span> U <span class='plus-sign'>+</span> ❤️", a: "SOLUCAN" },
-            { q: "M <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🌿", a: "MANDAL" },
-            { q: "👁️ <span class='plus-sign'>+</span> 🌋 <span class='plus-sign'>+</span> A", a: "BAKLAVA" },
-            { q: "Ⓜ️ <span class='plus-sign'>+</span> 🌿 <span class='plus-sign'>+</span> ✋", a: "MOTEL" },
-            { q: "B <span class='plus-sign'>+</span> ✋ <span class='plus-sign'>+</span> A", a: "BELA" },
-            { q: "🍯 <span class='plus-sign'>+</span> 🛬 <span class='plus-sign'>+</span> A", a: "BALİNA" },
-            { q: "Ⓜ️ <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🪾", a: "MANDAL" },
-            { q: "S <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🌿 <span class='plus-sign'>+</span> 🍽️", a: "SANDALYE" },
-            { q: "❄️ <span class='plus-sign'>+</span> N <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> 🌸", a: "KARNABAHAR" },
-            { q: "💥 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> I <span class='plus-sign'>+</span> ❤️", a: "PATLICAN" },
-            { q: "💥 <span class='plus-sign'>+</span> 🐎 <span class='plus-sign'>+</span> E <span class='plus-sign'>+</span> S", a: "PATATES" },
-            { q: "✋ <span class='plus-sign'>+</span> D <span class='plus-sign'>+</span> İ <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> ↔️", a: "ELDİVEN" },
-            { q: "T <span class='plus-sign'>+</span> ✋ <span class='plus-sign'>+</span> E <span class='plus-sign'>+</span> F <span class='plus-sign'>+</span> 🔟", a: "TELEFON" },
-            { q: "Ⓜ️ <span class='plus-sign'>+</span> ⏰ <span class='plus-sign'>+</span> 🪾 <span class='plus-sign'>+</span> 🛬 <span class='plus-sign'>+</span> A", a: "MANDALİNA" },
-            { q: "T <span class='plus-sign'>+</span> ✋ <span class='plus-sign'>+</span> 🏠 <span class='plus-sign'>+</span> 👁️ <span class='plus-sign'>+</span> Y <span class='plus-sign'>+</span> 🔟", a: "TELEVİZYON" },
-            { q: "❄️ <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> N <span class='plus-sign'>+</span> 🐘", a: "KARANFİL" },
-            { q: "☁️ <span class='plus-sign'>+</span> 🐦 <span class='plus-sign'>+</span> 🕸️ <span class='plus-sign'>+</span> I", a: "GÖKKUŞAĞI" },
-            { q: "🔔 <span class='plus-sign'>+</span> ⚪ <span class='plus-sign'>+</span> 🏰", a: "ÇANAKKALE" },
-            { q: "🍯 <span class='plus-sign'>+</span> 💂 <span class='plus-sign'>+</span> ⬇️", a: "BALERİN" },
-            { q: "💳 <span class='plus-sign'>+</span> 🔟", a: "KARTON" },
-            { q: "🍯 <span class='plus-sign'>+</span> 🔟", a: "BALON" },
-            { q: "🏁 <span class='plus-sign'>+</span> 🔎", a: "MATARA" },
-            { q: "🧣 <span class='plus-sign'>+</span> ✅", a: "ŞALVAR" },
-            { q: "🌾 <span class='plus-sign'>+</span> ⌛", a: "SAZAN" },
-            { q: "💪 <span class='plus-sign'>+</span> 🔟", a: "KOLON" },
-            { q: "🦢 <span class='plus-sign'>+</span> ⌛", a: "KAZAN" },
-            { q: "🐦 <span class='plus-sign'>+</span> ⚪", a: "KUŞAK" },
-            { q: "👤 <span class='plus-sign'>+</span> ⚪", a: "BAŞAK" },
-            { q: "⚪ <span class='plus-sign'>+</span> 🌊", a: "AKDENİZ" },
-            { q: "⚫ <span class='plus-sign'>+</span> 💪", a: "KARAKOL" },
-            { q: "💪 <span class='plus-sign'>+</span> 🍞", a: "KOLYE" },
-            { q: "🌙 <span class='plus-sign'>+</span> ⚪", a: "AYAK" },
-            { q: "👤 <span class='plus-sign'>+</span> 🐝", a: "BAŞARI" },
-            { q: "🔴 <span class='plus-sign'>+</span> ⌛", a: "ALAN" },
-            { q: "🌙 <span class='plus-sign'>+</span> 📉", a: "AYAZ" },
-            { q: "📷 <span class='plus-sign'>+</span> 🥤", a: "ÇEKİÇ" },
-            { q: "🪵 <span class='plus-sign'>+</span> ⚪", a: "DALAK" },
-            { q: "🏠 <span class='plus-sign'>+</span> 🦌", a: "EVREN" },
-            { q: "☀️ <span class='plus-sign'>+</span> 🟰", a: "GÜNEŞ" },
-            { q: "📞 <span class='plus-sign'>+</span> 🌙", a: "HATAY" },
-            { q: "🩸 <span class='plus-sign'>+</span> 🔴", a: "KANAL" },
-            { q: "🦢 <span class='plus-sign'>+</span> ⚪", a: "KAZAK" },
-            { q: "💪 <span class='plus-sign'>+</span> 🌙", a: "KOLAY" },
-            { q: "🟣 <span class='plus-sign'>+</span> 🔴", a: "MORAL" },
-            { q: "📞 <span class='plus-sign'>+</span> 👨‍👩‍👧‍👦", a: "TELSİZ" },
-            { q: "⚽ <span class='plus-sign'>+</span> 🔴", a: "TOPAL" },
-            { q: "✅ <span class='plus-sign'>+</span> 🏙️", a: "VARİL" },
-            { q: "⚪ <span class='plus-sign'>+</span> 🧔", a: "AKBABA" },
-            { q: "🍯 <span class='plus-sign'>+</span> 🥩", a: "BALET" },
-            { q: "❤️ <span class='plus-sign'>+</span> 🪖", a: "CANER" },
-            { q: "🧎 <span class='plus-sign'>+</span> ✋", a: "DİZEL" },
-            { q: "🩲 <span class='plus-sign'>+</span> 🐴", a: "DONAT" },
-            { q: "🪖 <span class='plus-sign'>+</span> 🏨", a: "ERHAN" },
-            { q: "🛑 <span class='plus-sign'>+</span> 🩸", a: "KALKAN" },
-            { q: "✂️ <span class='plus-sign'>+</span> 🪖", a: "KESER" },
-            { q: "💵 <span class='plus-sign'>+</span> 🔴", a: "KURAL" },
-            { q: "🧲 <span class='plus-sign'>+</span> ⌛", a: "NALAN" },
-            { q: "🔟 <span class='plus-sign'>+</span> 🌙", a: "ONAY" },
-            { q: "🔋 <span class='plus-sign'>+</span> 🥤", a: "PİLİÇ" },
-            { q: "🔚 <span class='plus-sign'>+</span> ✈️", a: "SONUÇ" },
-            { q: "💧 <span class='plus-sign'>+</span> 🐴", a: "SUAT" },
-            { q: "👑 <span class='plus-sign'>+</span> 💨 <span class='plus-sign'>+</span> 🪖", a: "ŞAHESER" },
-            { q: "✊ <span class='plus-sign'>+</span> 🛑", a: "TUTKAL" },
-            { q: "✈️ <span class='plus-sign'>+</span> ⚪", a: "UÇAK" },
-            { q: "🛥️ <span class='plus-sign'>+</span> ⚪", a: "YATAK" },
-            { q: "🏹 <span class='plus-sign'>+</span> 🕳️", a: "YAYIN" },
-            { q: "💯 <span class='plus-sign'>+</span> 🐑", a: "YÜZME" },
-            { q: "🎲 <span class='plus-sign'>+</span> 🪖", a: "ZARAR" },
-            { q: "🩸 <span class='plus-sign'>+</span> 🐴", a: "KANAT" },
-            { q: "🐘 <span class='plus-sign'>+</span> 👣", a: "FİLİZ" },
-            { q: "🔋 <span class='plus-sign'>+</span> 🌿", a: "PİLOT" },
-            { q: "🍯 <span class='plus-sign'>+</span> K <span class='plus-sign'>+</span> 🔟", a: "BALKON" },
-            { q: "Ç <span class='plus-sign'>+</span> 🐴 <span class='plus-sign'>+</span> 🔴", a: "ÇATAL" },
-            { q: "S <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> 🔴", a: "SANAL" },
-            { q: "K <span class='plus-sign'>+</span> 🔓 <span class='plus-sign'>+</span> ⚪", a: "KAÇAK" },
-            { q: "K <span class='plus-sign'>+</span> 🌙 <span class='plus-sign'>+</span> ⚪", a: "KAYAK" },
-            { q: "D <span class='plus-sign'>+</span> 🌙 <span class='plus-sign'>+</span> ⚪", a: "DAYAK" },
-            { q: "☕ <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> ⚪", a: "ÇAYLAK" },
-            { q: "K <span class='plus-sign'>+</span> 🔟 <span class='plus-sign'>+</span> ⚪", a: "KONAK" },
-            { q: "🛑 <span class='plus-sign'>+</span> ⚪", a: "DURAK" },
-            { q: "K <span class='plus-sign'>+</span> 💵 <span class='plus-sign'>+</span> ⚪", a: "KURAK" },
-            { q: "Y <span class='plus-sign'>+</span> 🥩 <span class='plus-sign'>+</span> 🪖", a: "YETER" },
-            { q: "M <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> ⚪", a: "MERAK" },
-            { q: "Y <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> ⚪", a: "YANAK" },
-            { q: "🌿 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> ⚪", a: "OTLAK" },
-            { q: "💧 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> ⚪", a: "SULAK" },
-            { q: "B <span class='plus-sign'>+</span> 🔴 <span class='plus-sign'>+</span> 🥩", a: "BALET" },
-            { q: "⌛ <span class='plus-sign'>+</span> K <span class='plus-sign'>+</span> 🥩", a: "ANKET" },
-            { q: " 1️⃣ <span class='plus-sign'>+</span> 📉", a: "BİRAZ" },
-            { q: "🩸 <span class='plus-sign'>+</span> 🔴", a: "KANAL" },
-            { q: "T <span class='plus-sign'>+</span> 🔴 <span class='plus-sign'>+</span> ⌛", a: "TALAN" },
-            { q: "🛶 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> 🐴", a: "SALTANAT" },
-            { q: "G <span class='plus-sign'>+</span> 🔴 <span class='plus-sign'>+</span> 🐴 <span class='plus-sign'>+</span> A", a: "GALATA" },
-            { q: "M <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> G <span class='plus-sign'>+</span> 🔴", a: "MANGAL" },
-            { q: "S <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> 🪵", a: "SANDAL" },
-            { q: "M <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> 🪵", a: "MANDAL" },
-            { q: "❄️ <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> 🔴", a: "KARTAL" },
-            { q: "S <span class='plus-sign'>+</span> 🕳️ <span class='plus-sign'>+</span> Y <span class='plus-sign'>+</span> 🔴", a: "SİNYAL" },
-            { q: " <span class='plus-sign'>+</span> Y <span class='plus-sign'>+</span> 🔟", a: "KANYON" },
-            { q: "P <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> 🔴 <span class='plus-sign'>+</span> 🔟", a: "PANTALON" },
-            { q: "G <span class='plus-sign'>+</span> 📉 <span class='plus-sign'>+</span> 🥩 <span class='plus-sign'>+</span> E", a: "GAZETE" },
-            { q: "❄️ <span class='plus-sign'>+</span> ⚽ <span class='plus-sign'>+</span> U", a: "KARTOPU" },
-            { q: "T <span class='plus-sign'>+</span> ⚽ <span class='plus-sign'>+</span> R <span class='plus-sign'>+</span> ⚪", a: "TOPRAK" },
-            { q: "H <span class='plus-sign'>+</span> 🌙 <span class='plus-sign'>+</span> R <span class='plus-sign'>+</span> ⌛", a: "HAYRAN" },
-            { q: "H <span class='plus-sign'>+</span> 🌙 <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> ⌛", a: "HAYVAN" },
-            { q: "T <span class='plus-sign'>+</span> 🏹 <span class='plus-sign'>+</span> 🐴", a: "TOKAT" },
-            { q: "H <span class='plus-sign'>+</span> 🗳️ <span class='plus-sign'>+</span> R <span class='plus-sign'>+</span> 🐴", a: "HOYRAT" },
-            { q: "R <span class='plus-sign'>+</span> 👻 <span class='plus-sign'>+</span> S <span class='plus-sign'>+</span> 🐴", a: "RUHSAT" },
-            { q: "K <span class='plus-sign'>+</span> 📉 <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> Ç", a: "KAZANÇ" },
-            { q: "Ş <span class='plus-sign'>+</span> 🪖 <span class='plus-sign'>+</span> B <span class='plus-sign'>+</span> 🥩", a: "ŞERBET" },
-            { q: "H <span class='plus-sign'>+</span> 👣 <span class='plus-sign'>+</span> M <span class='plus-sign'>+</span> 🥩", a: "HİZMET" },
-            { q: "🏠 <span class='plus-sign'>+</span> 🦌 <span class='plus-sign'>+</span> 🌊", a: "EVRENSEL" },
-            { q: "🔔 <span class='plus-sign'>+</span> ⚪ <span class='plus-sign'>+</span> 🏰", a: "ÇANAKKALE" },
-            { q: "❄️ <span class='plus-sign'>+</span> ⌛ <span class='plus-sign'>+</span> 🐘", a: "KARANFİL" },
-            { q: "⚫ <span class='plus-sign'>+</span> 🌊", a: "KARADENİZ" },
-            { q: "🌲 <span class='plus-sign'>+</span> K <span class='plus-sign'>+</span> ⚪ <span class='plus-sign'>+</span> ⌛", a: "AĞAÇKAKAN" },
-            { q: "🫗 <span class='plus-sign'>+</span> 🐦 <span class='plus-sign'>+</span> 🕸️ <span class='plus-sign'>+</span> I", a: "GÖKKUŞAĞI" },
-            { q: "🫗 <span class='plus-sign'>+</span> 💯 <span class='plus-sign'>+</span> Ü", a: "GÖKYÜZÜ" },
-            { q: "⚫ <span class='plus-sign'>+</span> 🛣️ <span class='plus-sign'>+</span> U", a: "KARAYOLU" },
-            { q: "👁️ <span class='plus-sign'>+</span> 💧 <span class='plus-sign'>+</span> I", a: "GÖZYAŞI" },
-            { q: "🍯 <span class='plus-sign'>+</span> 🌙 <span class='plus-sign'>+</span> I", a: "BALAYI" },
-            { q: "📅 <span class='plus-sign'>+</span> 👤 <span class='plus-sign'>+</span> I", a: "YILBAŞI" },
-            { q: "🥛 <span class='plus-sign'>+</span> 🎵 <span class='plus-sign'>+</span> Ç", a: "SÜTLAÇ" },
-            { q: "🌹 <span class='plus-sign'>+</span> 🎵 <span class='plus-sign'>+</span> Ç", a: "GÜLLAÇ" },
-            { q: "🌊 <span class='plus-sign'>+</span> 🔴 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> I", a: "DENİZALTI" },
-            { q: "⚪ <span class='plus-sign'>+</span> S <span class='plus-sign'>+</span> 🔎 <span class='plus-sign'>+</span> Y", a: "AKSARAY" },
-            { q: "⬅️ <span class='plus-sign'>+</span> U <span class='plus-sign'>+</span> C <span class='plus-sign'>+</span> ⌛", a: "SOLUCAN" },
-            { q: "🏨 <span class='plus-sign'>+</span> I <span class='plus-sign'>+</span> M <span class='plus-sign'>+</span> 🖐️ <span class='plus-sign'>+</span> İ", a: "HANIMELİ" },
-            { q: "❄️ <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> V <span class='plus-sign'>+</span> 👣 <span class='plus-sign'>+</span> 🐕", a: "KARTVİZİT" },
-            { q: "❤️ <span class='plus-sign'>+</span> 💵 <span class='plus-sign'>+</span> T <span class='plus-sign'>+</span> 🔎 <span class='plus-sign'>+</span> N", a: "CANKURTARAN" },
-            { q: "⌛ <span class='plus-sign'>+</span> A <span class='plus-sign'>+</span> 🎶 <span class='plus-sign'>+</span> L <span class='plus-sign'>+</span> U", a: "ANADOLU" }
-        ];
-
-
-
-
-
-
-
-
-
-
-
-
-
         let currentIndex = 0;
+        let maxReachedLevel = 0;
+
         const startScreen = document.getElementById("start-screen");
         const gameScreen = document.getElementById("game-screen");
         const endScreen = document.getElementById("end-screen");
+        const levelScreen = document.getElementById("level-screen");
+        const adminScreen = document.getElementById("admin-screen");
+
         const questionDisplay = document.getElementById("question-display");
         const userInput = document.getElementById("user-input");
         const feedbackMsg = document.getElementById("feedback-msg");
@@ -529,12 +807,104 @@
         const qCurrent = document.getElementById("q-current");
         const qTotal = document.getElementById("q-total");
         const progressBar = document.getElementById("progress-bar");
-        function startGame() {
-            startScreen.style.display = "none";
-            gameScreen.style.display = "block";
+        const btnResume = document.getElementById("btn-resume");
+        const levelGrid = document.getElementById("level-grid");
+
+        const successModal = document.getElementById("success-modal");
+        const difficultySlider = document.getElementById("difficulty-slider");
+        const ratingValDisplay = document.getElementById("rating-val");
+        const modalTitle = document.getElementById("modal-title");
+
+        let difficultyData = [];
+
+        window.onload = function () {
+            const savedLevel = localStorage.getItem('resfebe_maxLevel');
+            if (savedLevel) {
+                maxReachedLevel = parseInt(savedLevel);
+                btnResume.style.display = "block";
+                btnResume.textContent = `▶️ DEVAM ET (Bölüm ${maxReachedLevel + 1})`;
+            } else {
+                maxReachedLevel = 0;
+            }
+        };
+
+        function startGame(levelIndex) {
+            currentIndex = levelIndex;
+            showScreen(gameScreen);
             qTotal.textContent = questions.length;
             loadQuestion();
         }
+
+        function resumeGame() {
+            startGame(maxReachedLevel);
+        }
+
+        function backToMenu() {
+            if (maxReachedLevel > 0) {
+                btnResume.style.display = "block";
+                btnResume.textContent = `▶️ DEVAM ET (Bölüm ${maxReachedLevel + 1})`;
+            }
+            showScreen(startScreen);
+        }
+
+        function openAdminPanel() {
+            let pass = prompt("Yönetici Şifresi:");
+            if (pass === "snnrsfb..") {
+                renderAdminTable();
+                showScreen(adminScreen);
+            } else if (pass !== null) {
+                alert("Hatalı Şifre!");
+            }
+        }
+
+        function renderAdminTable() {
+            const tbody = document.querySelector("#admin-table tbody");
+            tbody.innerHTML = "";
+            if (difficultyData.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='3'>Henüz veri yok.</td></tr>";
+                return;
+            }
+            difficultyData.forEach(item => {
+                let row = `<tr>
+                    <td>${item.index}</td>
+                    <td>${item.cevap}</td>
+                    <td><strong>${item.zorluk}</strong></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function showScreen(screen) {
+            startScreen.style.display = "none";
+            gameScreen.style.display = "none";
+            endScreen.style.display = "none";
+            levelScreen.style.display = "none";
+            adminScreen.style.display = "none";
+            screen.style.display = "block";
+        }
+
+        function showLevelScreen() {
+            showScreen(levelScreen);
+            levelGrid.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const btn = document.createElement("button");
+                btn.textContent = index + 1;
+                btn.className = "level-btn";
+
+                if (index <= maxReachedLevel) {
+                    btn.classList.add("unlocked");
+                    btn.onclick = () => startGame(index);
+                    if (index === maxReachedLevel) btn.classList.add("current");
+                } else {
+                    btn.disabled = true;
+                    btn.style.opacity = "0.5";
+                    btn.textContent = "🔒";
+                }
+                levelGrid.appendChild(btn);
+            });
+        }
+
         function loadQuestion() {
             userInput.value = "";
             userInput.disabled = false;
@@ -544,18 +914,11 @@
             btnCheck.style.display = "block";
             btnNext.style.display = "none";
             qCurrent.textContent = currentIndex + 1;
+
             const percentage = ((currentIndex) / questions.length) * 100;
             progressBar.style.width = percentage + "%";
-            questionDisplay.innerHTML = questions[currentIndex].q;
-        }
 
-        function showFeedback(text, type) {
-            feedbackMsg.textContent = text;
-            feedbackMsg.className = `feedback-message visible ${type}`;
-            if (type === 'error' || type === 'warning') {
-                userInput.classList.add('shake-it');
-                setTimeout(() => userInput.classList.remove('shake-it'), 400);
-            }
+            questionDisplay.innerHTML = questions[currentIndex].q;
         }
 
         function checkAnswer() {
@@ -568,21 +931,63 @@
 
             let userAnswer = val.toLocaleUpperCase('tr-TR');
             let correctAnswer = questions[currentIndex].a.toLocaleUpperCase('tr-TR');
+
             if (userAnswer !== correctAnswer) {
                 showFeedback("Doğru değil, tekrar dene! 🤔", "error");
                 userInput.select();
             }
             else {
-                showFeedback("Süpersin! Doğru Bildin! 🎉", "success");
-
                 userInput.disabled = true;
                 btnCheck.style.display = "none";
-                btnNext.style.display = "block";
-                const percentage = ((currentIndex + 1) / questions.length) * 100;
-                progressBar.style.width = percentage + "%";
 
-                btnNext.focus();
+                if (currentIndex >= maxReachedLevel) {
+                    maxReachedLevel = currentIndex + 1;
+                    if (maxReachedLevel >= questions.length) maxReachedLevel = questions.length - 1;
+
+                    localStorage.setItem('resfebe_maxLevel', maxReachedLevel);
+                }
+
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                const motivations = ["HARİKASIN!", "ZEKA KÜPÜ!", "SÜPERSİN!", "MÜKEMMEL!", "EFSANESİN!"];
+                modalTitle.textContent = motivations[Math.floor(Math.random() * motivations.length)] + " 🎉";
+
+                setTimeout(() => {
+                    successModal.style.display = "flex";
+                    difficultySlider.value = 5;
+                    ratingValDisplay.textContent = "5";
+                }, 500);
             }
+        }
+
+        function showFeedback(text, type) {
+            feedbackMsg.textContent = text;
+            feedbackMsg.className = `feedback-message visible ${type}`;
+            if (type === 'error' || type === 'warning') {
+                userInput.classList.add('shake-it');
+                setTimeout(() => userInput.classList.remove('shake-it'), 400);
+            }
+        }
+
+        function saveAndNext() {
+            const exists = difficultyData.some(d => d.index === currentIndex + 1);
+            if (!exists) {
+                difficultyData.push({
+                    index: currentIndex + 1,
+                    soru: questions[currentIndex].q,
+                    cevap: questions[currentIndex].a,
+                    zorluk: difficultySlider.value
+                });
+            }
+
+            successModal.style.display = "none";
+            nextQuestion();
+        }
+
+        function closeModalOnly() {
+            successModal.style.display = "none";
+            btnNext.style.display = "block";
+            const percentage = ((currentIndex + 1) / questions.length) * 100;
+            progressBar.style.width = percentage + "%";
         }
 
         function nextQuestion() {
@@ -590,22 +995,53 @@
             if (currentIndex < questions.length) {
                 loadQuestion();
             } else {
-                gameScreen.style.display = "none";
-                endScreen.style.display = "block";
+                showScreen(endScreen);
             }
         }
 
-        userInput.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                checkAnswer();
+        function downloadCSV() {
+            if (difficultyData.length === 0) {
+                alert("Henüz hiç veri birikmedi!");
+                return;
             }
-        });
 
-        btnNext.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                nextQuestion();
-            }
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "Sıra No;Soru Kodu;Cevap;Zorluk (1-10)\n";
+
+            difficultyData.forEach(function (row) {
+                let rowString = `${row.index};"${row.soru.replace(/"/g, '""')}";${row.cevap};${row.zorluk}`;
+                csvContent += rowString + "\n";
+            });
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "resfebe_zorluk_verileri.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        userInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") checkAnswer();
         });
+        btnNext.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") nextQuestion();
+        });
+        const exitModal = document.getElementById("exit-modal");
+
+        function showExitModal() {
+            exitModal.style.display = "flex";
+        }
+
+        function closeExitModal() {
+            exitModal.style.display = "none";
+        }
+
+        function confirmExit() {
+            closeExitModal();
+            backToMenu();
+        }
 
     </script>
 </body>
